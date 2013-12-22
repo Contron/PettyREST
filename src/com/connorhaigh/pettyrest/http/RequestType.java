@@ -6,7 +6,7 @@ public class RequestType
 	 * Create a new HTTP request type object.
 	 * @param type The request type.
 	 */
-	private RequestType(String type)
+	public RequestType(String type)
 	{
 		//init
 		this.type = type;

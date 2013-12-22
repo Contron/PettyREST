@@ -32,11 +32,9 @@ public class Page
 		//body
 		stringBuilder.append("\t<body>");
 		stringBuilder.append(Page.NEW_LINE);
-		stringBuilder.append("\t\t<h2>" + title + "</h2>");
+		stringBuilder.append("\t\t<h1>" + title + "</h1>");
 		stringBuilder.append(Page.NEW_LINE);
-		stringBuilder.append("\t\t<hr />");
-		stringBuilder.append(Page.NEW_LINE);
-		stringBuilder.append("\t\t" + description);
+		stringBuilder.append("\t\t<p>" + description + "</p>");
 		stringBuilder.append(Page.NEW_LINE);
 		stringBuilder.append("\t\t<hr />");
 		stringBuilder.append(Page.NEW_LINE);

@@ -49,5 +49,5 @@ Roadmap
 
 The current plan in the future I have for PettyREST includes:
 
-- Support for POST and perhaps DELETE
+- Working support for POST
 - Better modularity

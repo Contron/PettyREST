@@ -7,7 +7,7 @@ public class ContentType
 	 * @param type The main type.
 	 * @param subtype The sub type.
 	 */
-	private ContentType(String type, String subtype)
+	public ContentType(String type, String subtype)
 	{
 		//init
 		this.type = type;
