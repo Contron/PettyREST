@@ -144,15 +144,15 @@ public class Transaction implements Runnable
 				//get definition
 				Definition definition = this.server.get(resource);
 				
-				//check definition type
-				String definitionType = definition.getRequestType().getType();
-				if (type.equals(definitionType))
+				//check request type
+				String requestType = definition.getRequestType().getType();
+				if (type.equals(requestType))
 				{
 					//output
 					StringBuilder output = new StringBuilder();
 					
 					//create request class and handle
-					Class<? extends Request> requestClass = definition.getRequest();
+					Class<? extends Request> requestClass = definition.getRequestClass();
 					Request request = requestClass.newInstance();
 					request.handle(headerMap, postDataMap, args, output);
 					

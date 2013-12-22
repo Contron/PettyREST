@@ -25,7 +25,7 @@ public class Definition
 	 * Returns the request class for this definition.
 	 * @return The request class.
 	 */
-	public Class<? extends Request> getRequest()
+	public Class<? extends Request> getRequestClass()
 	{
 		return this.request;
 	}
