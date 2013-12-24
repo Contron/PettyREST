@@ -46,7 +46,7 @@ public class Transaction implements Runnable
 			Transaction.this.stop();
 		} catch (Exception ex) {
 			//error
-			ex.printStackTrace();
+			this.server.notifyErrorListeners(ex);
 		}
 	}
 	
@@ -92,6 +92,24 @@ public class Transaction implements Runnable
 		
 		//stop thread
 		this.running = false;
+	}
+	
+	/**
+	 * Returns the server for this transaction.
+	 * @return The server.
+	 */
+	public Server getServer()
+	{
+		return this.server;
+	}
+	
+	/**
+	 * Returns the client socket for this transaction.
+	 * @return The client socket.
+	 */
+	public Socket getSocket()
+	{
+		return this.socket;
 	}
 	
 	/**

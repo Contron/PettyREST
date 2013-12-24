@@ -4,9 +4,12 @@ package com.connorhaigh.pettyrest.core;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.connorhaigh.pettyrest.exception.RESTException;
+import com.connorhaigh.pettyrest.listener.ErrorListener;
+import com.connorhaigh.pettyrest.listener.TransactionListener;
 
 public class Server implements Runnable
 {
@@ -24,6 +27,9 @@ public class Server implements Runnable
 		this.serverSocket = null;
 		
 		this.definitionMap = new HashMap<String, Definition>();
+		
+		this.transactionListeners = new ArrayList<TransactionListener>();
+		this.errorListeners = new ArrayList<ErrorListener>();
 	}
 	
 	/**
@@ -43,8 +49,12 @@ public class Server implements Runnable
 				//create transaction and process
 				Transaction transaction = new Transaction(Server.this, socket);
 				transaction.start();
+				
+				//notify
+				this.notifyTransactionListeners(transaction);
 			} catch (Exception ex) {
 				//error
+				this.notifyErrorListeners(ex);
 			}
 		}
 	}
@@ -149,6 +159,64 @@ public class Server implements Runnable
 		return this.port;
 	}
 	
+	/**
+	 * Add a transaction listener to this server to be notified when new transactions are created.
+	 * @param transactionListener The transaction listener to add.
+	 */
+	public void addTransactionListener(TransactionListener transactionListener)
+	{
+		this.transactionListeners.add(transactionListener);
+	}
+	
+	/**
+	 * Remove a transaction listener from this server from be notified when new transactions are created.
+	 * @param transactionListener The transaction listener from remove.
+	 */
+	public void removeTransactionListener(TransactionListener transactionListener)
+	{
+		this.transactionListeners.remove(transactionListener);
+	}
+	
+	/**
+	 * Add an error listener to this server to be notified when an error occurs.
+	 * @param errorListener The error listener to add.
+	 */
+	public void addErrorListener(ErrorListener errorListener)
+	{
+		this.errorListeners.add(errorListener);
+	}
+	
+	/**
+	 * Remove an error listener from this server from be notified when an error occurs.
+	 * @param errorListener The error listener from remove.
+	 */
+	public void removeErrorListener(ErrorListener errorListener)
+	{
+		this.errorListeners.remove(errorListener);
+	}
+	
+	/**
+	 * Notify all registered transaction listeners of a new transaction.
+	 * @param transaction The new transaction.
+	 */
+	protected void notifyTransactionListeners(Transaction transaction)
+	{
+		//loop
+		for (TransactionListener transactionListener : this.transactionListeners)
+			transactionListener.transactionCreated(transaction);
+	}
+	
+	/**
+	 * Notify all registered error listeners of a new error.
+	 * @param exception The new exception.
+	 */
+	protected void notifyErrorListeners(Exception exception)
+	{
+		//loop
+		for (ErrorListener errorListener : this.errorListeners)
+			errorListener.error(exception);
+	}
+	
 	//vars
 	private int port;
 	
@@ -157,4 +225,7 @@ public class Server implements Runnable
 	private ServerSocket serverSocket;
 	
 	private HashMap<String, Definition> definitionMap;
+	
+	private ArrayList<TransactionListener> transactionListeners;
+	private ArrayList<ErrorListener> errorListeners;
 }
