@@ -45,6 +45,8 @@ public class Server implements Runnable
 			{
 				//wait for socket
 				Socket socket = this.serverSocket.accept();
+				socket.setSoTimeout(10000);
+				socket.setKeepAlive(false);
 				
 				//create transaction and process
 				Transaction transaction = new Transaction(Server.this, socket);
@@ -158,7 +160,7 @@ public class Server implements Runnable
 	{
 		return this.port;
 	}
-	
+
 	/**
 	 * Add a transaction listener to this server to be notified when new transactions are created.
 	 * @param transactionListener The transaction listener to add.

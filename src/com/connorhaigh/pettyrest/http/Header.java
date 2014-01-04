@@ -1,5 +1,6 @@
 package com.connorhaigh.pettyrest.http;
 
+//imports
 import com.connorhaigh.pettyrest.PettyREST;
 
 public class Header 
@@ -17,23 +18,18 @@ public class Header
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		//code
-		stringBuilder.append("HTTP/1.1 " + reply.getReply());
-		stringBuilder.append(Header.CARRIAGE_RETURN);
+		stringBuilder.append("HTTP/1.1 " + reply.getReply() + Header.CARRIAGE_RETURN);
 		
 		//content type, length and connection
-		stringBuilder.append("Content-Type: " + type.getType());
-		stringBuilder.append(Header.CARRIAGE_RETURN);
-		stringBuilder.append("Content-Length: " + length);
-		stringBuilder.append(Header.CARRIAGE_RETURN);
-		stringBuilder.append("Connection: close");
-		stringBuilder.append(Header.CARRIAGE_RETURN);
+		stringBuilder.append("Content-Type: " + type.getType() + Header.CARRIAGE_RETURN);
+		stringBuilder.append("Content-Length: " + length + Header.CARRIAGE_RETURN);
+		stringBuilder.append("Cache-Control: no-cache" + Header.CARRIAGE_RETURN);
+		stringBuilder.append("Connection: close" + Header.CARRIAGE_RETURN);
 		
 		//server
-		stringBuilder.append("Server: " + PettyREST.SERVER_NAME);
-		stringBuilder.append(Header.CARRIAGE_RETURN);
+		stringBuilder.append("Server: " + PettyREST.SERVER_NAME + Header.CARRIAGE_RETURN);
 		
 		//carriage return
-		//signals the end of the header
 		stringBuilder.append(Header.CARRIAGE_RETURN);
 		
 		return stringBuilder.toString();

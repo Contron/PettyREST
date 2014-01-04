@@ -135,13 +135,13 @@ public class Transaction implements Runnable
 		
 		//data maps
 		HashMap<String, String> headerMap = new HashMap<String, String>();
-		HashMap<String, String> postDataMap = new HashMap<String, String>();
+		HashMap<String, String> postMap = new HashMap<String, String>();
 		
 		//read input headers and post data
-		while (this.inputStream.ready())
+		String line = null;
+		while ((line = this.inputStream.readLine()) != null)
 		{
-			//read line
-			String line = this.inputStream.readLine();
+			//break off if empty
 			if (line.isEmpty())
 				break;
 			
@@ -153,7 +153,7 @@ public class Transaction implements Runnable
 			//put
 			headerMap.put(key, value);
 		}
-		
+			
 		try
 		{
 			//check if contains
@@ -164,7 +164,7 @@ public class Transaction implements Runnable
 				
 				//check request type
 				String requestType = definition.getRequestType().getType();
-				if (type.equals(requestType))
+				if (requestType.equals(type))
 				{
 					//output
 					StringBuilder output = new StringBuilder();
@@ -172,7 +172,7 @@ public class Transaction implements Runnable
 					//create request class and handle
 					Class<? extends Request> requestClass = definition.getRequestClass();
 					Request request = requestClass.newInstance();
-					request.handle(headerMap, postDataMap, args, output);
+					request.handle(headerMap, postMap, args, output);
 					
 					//output
 					page = (Header.construct(Reply.OKAY_200_REPLY, definition.getContentType(), output.length()) + output.toString());
