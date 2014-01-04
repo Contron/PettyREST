@@ -49,5 +49,4 @@ Roadmap
 
 The current plan in the future I have for PettyREST includes:
 
-- Working support for POST
-- Better modularity
+*All roadmap goals completed!*
