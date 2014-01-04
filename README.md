@@ -39,10 +39,10 @@ public void handle(HashMap<String, String> headers, HashMap<String, String> post
 Once you've done that, you can link it to your server by calling the following:
 
 ```java
-server.link("/some/special/url", new Definition(MyRequestHandler.class, RequestType.GET_REQUEST, ContentType.TEXT_HTML_TYPE));
+server.link("/some/special/url", new Definition(MyRequestHandler.class, RequestType.GET_REQUEST, ContentType.TEXT_PLAIN_TYPE));
 ```
 
-The above will link a custom handler to the **/some/special/url** address on the server, accessible with a **GET** request with a content type of **text/html**
+The above will link a custom handler to the **/some/special/url** address on the server, accessible with a **GET** request with a content type of **text/plain**
 
 Roadmap
 ------

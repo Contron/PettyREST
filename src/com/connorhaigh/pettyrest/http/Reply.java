@@ -37,6 +37,7 @@ public class Reply
 	
 	//replies
 	public static final Reply OKAY_200_REPLY = new Reply("200", "OK", "The resource was found and processed successfully.");
+	public static final Reply MOVED_PERMANENTLY_301_REPLY = new Reply("301", "Moved Permanently", "The resource has permanently been moved to a different location.");
 	public static final Reply BAD_REQUEST_400_REPLY = new Reply("400", "Bad Request", "A malformed request type was sent for the specified resource.");
 	public static final Reply ACCESS_DENIED_403_REPLY = new Reply("403", "Access Denied", "You do not have permission to view this resource.");
 	public static final Reply NOT_FOUND_404_REPLY = new Reply("404", "Not Found", "The specified resource was not found on this server.");

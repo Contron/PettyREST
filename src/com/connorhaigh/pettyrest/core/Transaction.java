@@ -123,37 +123,60 @@ public class Transaction implements Runnable
 		String[] requestParts = requestLine.split(" ");
 		
 		//get info
-		String type = requestParts[0];
-		String resource = requestParts[1];
+		String type = requestParts[0].trim();
+		String resource = requestParts[1].trim();
 		String[] resourceParts = resource.split("/");
 		String page = null;
 		
 		//convert arguments
 		ArrayList<String> args = new ArrayList<String>(Arrays.asList(resourceParts));
-		if (args.size() > 0)
-			args.remove(0);
 		
 		//data maps
 		HashMap<String, String> headerMap = new HashMap<String, String>();
 		HashMap<String, String> postMap = new HashMap<String, String>();
 		
-		//read input headers and post data
-		String line = null;
-		while ((line = this.inputStream.readLine()) != null)
+		//read input headers
+		String headerLine = null;
+		while ((headerLine = this.inputStream.readLine()) != null)
 		{
 			//break off if empty
-			if (line.isEmpty())
+			if (headerLine.isEmpty())
 				break;
 			
 			//split
-			String[] lineData = line.split(":");
+			String[] lineData = headerLine.split(":");
 			String key = lineData[0].trim();
 			String value = lineData[1].trim();
 				
 			//put
 			headerMap.put(key, value);
 		}
+		
+		//check for POST data
+		if (this.inputStream.ready())
+		{
+			//line builder
+			StringBuilder lineBuilder = new StringBuilder();
 			
+			//read char by char
+			while (this.inputStream.ready())
+				lineBuilder.append((char) this.inputStream.read());
+			
+			//split
+			String fieldLine = lineBuilder.toString();
+			String[] lineData = fieldLine.split("&");
+			for (String field : lineData)
+			{
+				//split again
+				String[] fieldData = field.split("=");
+				String key = fieldData[0].trim();
+				String value = fieldData[1].trim();
+				
+				//put
+				postMap.put(key, value);
+			}
+		}
+
 		try
 		{
 			//check if contains
