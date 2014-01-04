@@ -49,4 +49,4 @@ Roadmap
 
 The current plan in the future I have for PettyREST includes:
 
-*All roadmap goals completed!*
+- Support for binary POST data
