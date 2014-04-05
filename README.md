@@ -3,8 +3,6 @@ PettyREST
 
 A Java library for creating RESTful services and APIs.
 
-Designed with a no-bullshit theory in mind.
-
 Installation
 ------
 
@@ -27,24 +25,30 @@ Adding functionality
 
 To get the server to respond to requests, you'll need to extend the ```Request``` class and override the ```handle()``` method yourself.
 
-Header information and POST data (if the method is anything but, this will be empty), along with arguments are all supplied. Output to the browser is via appending to the ```output``` builder.
+Header information, POST data (if the method isn't anything but, this will be empty), and arguments (if there are no arguments present, this will also be empty) are all supplied. Output to the browser is via appending to the ```output``` builder.
 
 ```java
-public void handle(HashMap<String, String> headers, HashMap<String, String> post, ArrayList<String> args, StringBuilder output);
+public void handle(HashMap<String, String> arguments, HashMap<String, String> headers, HashMap<String, String> post, StringBuilder output)
 {
-	output.append("This is a working request being sent as text/plain\n");
+	//get an argument
+	String count = (arguments.containsKey("counter") ? arguments.get("counter") : "none");
+	
+	//show some output
+	output.append("This is output being displayed as text/plain, with the counter at " + count + ".");
 }
 ```
 
 Once you've done that, you can link it to your server by calling the following:
 
 ```java
-server.link("/some/special/url", new Definition(MyRequestHandler.class, RequestType.GET_REQUEST, ContentType.TEXT_PLAIN_TYPE));
+server.link("/hello/world", new Definition(MyRequestHandler.class, RequestType.GET_REQUEST, ContentType.TEXT_PLAIN_TYPE));
 ```
 
-The above will link a custom handler to the **/some/special/url** address on the server, accessible with a **GET** request with a content type of **text/plain**
+The above will link a custom handler to the **/hello/world** address on the server, accessible with a **GET** request with a content type of **text/plain**
 
-It is important to ensure that there is ***no*** trailing forward slash at the end of the URL.
+Arguments can be supplied to the URL by appending **?count=32** to the end of the URL, like so: **/hello/world?count=32**.
+
+It is important to ensure that there is ***no*** trailing forward slash at the end of the URL when you link it.
 
 Roadmap
 ------

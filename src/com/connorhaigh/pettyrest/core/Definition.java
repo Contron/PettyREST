@@ -1,6 +1,5 @@
 package com.connorhaigh.pettyrest.core;
 
-//imports
 import com.connorhaigh.pettyrest.http.ContentType;
 import com.connorhaigh.pettyrest.http.RequestType;
 

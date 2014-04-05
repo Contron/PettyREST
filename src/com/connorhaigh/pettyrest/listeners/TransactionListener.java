@@ -1,6 +1,5 @@
 package com.connorhaigh.pettyrest.listeners;
 
-//imports
 import com.connorhaigh.pettyrest.core.Transaction;
 
 public interface TransactionListener

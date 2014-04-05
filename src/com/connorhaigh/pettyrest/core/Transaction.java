@@ -1,14 +1,11 @@
 package com.connorhaigh.pettyrest.core;
 
-//imports
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 import com.connorhaigh.pettyrest.PettyREST;
@@ -99,8 +96,9 @@ public class Transaction implements Runnable
 	/**
 	 * Handle the request.
 	 * @throws IOException if the sockets could not be read or written to
+	 * @throws Exception if a general exception occurs
 	 */
-	private void handle() throws IOException
+	private void handle() throws IOException, Exception
 	{
 		//get request
 		String requestLine = this.inputStream.readLine();
@@ -110,20 +108,41 @@ public class Transaction implements Runnable
 		String type = requestParts[0].trim();
 		String resource = requestParts[1].trim();
 		String version = requestParts[2].trim();
-		String[] resourceParts = resource.split("/");
-		
-		//convert arguments
-		ArrayList<String> args = new ArrayList<String>(Arrays.asList(resourceParts));
 		
 		//data maps
-		HashMap<String, String> headerMap = new HashMap<String, String>();
-		HashMap<String, String> postMap = new HashMap<String, String>();
+		HashMap<String, String> arguments = new HashMap<String, String>();
+		HashMap<String, String> header = new HashMap<String, String>();
+		HashMap<String, String> post = new HashMap<String, String>();
+		
+		//check arguments
+		int argsIndex = resource.indexOf("?");
+		if (argsIndex != -1)
+		{
+			//extract arguments
+			String argumentsLine = resource.substring(argsIndex + 1);
+			String[] argumentData = argumentsLine.split("&");
+			for (String field : argumentData)
+			{
+				//split again
+				String[] fieldData = field.split("=");
+				if (fieldData.length < 2)
+					break;
+				
+				//put
+				String key = fieldData[0].trim();
+				String value = fieldData[1].trim();
+				arguments.put(key, value);
+			}
+			
+			//remove from request
+			resource = resource.substring(0, argsIndex);
+		}
 		
 		//read input headers
 		String headerLine = null;
 		while ((headerLine = this.inputStream.readLine()) != null)
 		{
-			//break off if empty
+			//check empty
 			if (headerLine.isEmpty())
 				break;
 			
@@ -133,7 +152,7 @@ public class Transaction implements Runnable
 			String value = lineData[1].trim();
 				
 			//put
-			headerMap.put(key, value);
+			header.put(key, value);
 		}
 		
 		//read POST data
@@ -153,34 +172,36 @@ public class Transaction implements Runnable
 			{
 				//split again
 				String[] fieldData = field.split("=");
-				String key = fieldData[0].trim();
-				String value = fieldData[1].trim();
+				if (fieldData.length < 2)
+					break;
 				
 				//put
-				postMap.put(key, value);
+				String key = fieldData[0].trim();
+				String value = fieldData[1].trim();
+				post.put(key, value);
 			}
 		}
 		
 		//output
-		this.outputStream.write(this.process(version, type, headerMap, postMap, args, resource));
+		this.outputStream.write(this.process(version, type, arguments, header, post, resource));
 	}
 	
 	/**
 	 * Process a request with the appropriate parameters.
 	 * @param version the HTTP version
 	 * @param type the type of the request
-	 * @param headerMap the map containing the header data
-	 * @param postMap the map containing the POST data
-	 * @param args the list of arguments
+	 * @param arguments the map containing arguments, if any
+	 * @param header the map containing the header data
+	 * @param post the map containing the POST data
 	 * @param resource the resource to look for
 	 * @return the page.
 	 */
 	private String process(String version, String type, 
-			HashMap<String, String> headerMap, HashMap<String, String> postMap, ArrayList<String> args, 
+			HashMap<String, String> arguments, HashMap<String, String> header, HashMap<String, String> post, 
 			String resource)
 	{
 		//check size
-		if (headerMap.size() > PettyREST.MAX_HEADERS || postMap.size() > PettyREST.MAX_POST)
+		if (arguments.size() > PettyREST.MAX_ARGUMENTS || header.size() > PettyREST.MAX_HEADERS || post.size() > PettyREST.MAX_POST)
 			return Output.constructAll(Reply.REQUEST_TOO_LARGE_413_REPLY);
 		
 		//check version
@@ -207,7 +228,7 @@ public class Transaction implements Runnable
 			//create request class and handle
 			Class<? extends Request> requestClass = definition.getRequestClass();
 			Request request = requestClass.newInstance();
-			request.handle(headerMap, postMap, args, output);
+			request.handle(arguments, header, post, output);
 			
 			//construct
 			String headers = Header.construct(Reply.OKAY_200_REPLY, definition.getContentType(), output.length());

@@ -1,6 +1,5 @@
 package com.connorhaigh.pettyrest.http;
 
-//imports
 import com.connorhaigh.pettyrest.PettyREST;
 
 public class Header 
