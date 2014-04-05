@@ -115,16 +115,16 @@ public class Transaction implements Runnable
 		HashMap<String, String> post = new HashMap<String, String>();
 		
 		//check arguments
-		int argsIndex = resource.indexOf("?");
+		int argsIndex = resource.indexOf(Transaction.ARGUMENT_INDICATOR);
 		if (argsIndex != -1)
 		{
 			//extract arguments
 			String argumentsLine = resource.substring(argsIndex + 1);
-			String[] argumentData = argumentsLine.split("&");
+			String[] argumentData = argumentsLine.split(Transaction.ARGUMENT_SEPARATOR);
 			for (String field : argumentData)
 			{
 				//split again
-				String[] fieldData = field.split("=");
+				String[] fieldData = field.split(Transaction.KEY_VALUE_OPERATOR);
 				if (fieldData.length < 2)
 					break;
 				
@@ -147,7 +147,7 @@ public class Transaction implements Runnable
 				break;
 			
 			//split
-			String[] lineData = headerLine.split(":");
+			String[] lineData = headerLine.split(Transaction.HEADER_SEPARATOR);
 			String key = lineData[0].trim();
 			String value = lineData[1].trim();
 				
@@ -167,11 +167,11 @@ public class Transaction implements Runnable
 			
 			//split
 			String fieldLine = lineBuilder.toString();
-			String[] lineData = fieldLine.split("&");
+			String[] lineData = fieldLine.split(Transaction.POST_SEPARATOR);
 			for (String field : lineData)
 			{
 				//split again
-				String[] fieldData = field.split("=");
+				String[] fieldData = field.split(Transaction.KEY_VALUE_OPERATOR);
 				if (fieldData.length < 2)
 					break;
 				
@@ -260,6 +260,13 @@ public class Transaction implements Runnable
 	{
 		return this.socket;
 	}
+	
+	public static final String KEY_VALUE_OPERATOR = "=";
+	
+	public static final String ARGUMENT_INDICATOR = "?";
+	public static final String ARGUMENT_SEPARATOR = "&";
+	public static final String HEADER_SEPARATOR = ":";
+	public static final String POST_SEPARATOR = "&";
 	
 	private Server server;
 	private Socket socket;

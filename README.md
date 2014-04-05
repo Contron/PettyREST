@@ -30,10 +30,11 @@ Header information, POST data (if the method isn't anything but, this will be em
 ```java
 public void handle(HashMap<String, String> arguments, HashMap<String, String> headers, HashMap<String, String> post, StringBuilder output)
 {
-	//get an argument
-	String count = (arguments.containsKey("counter") ? arguments.get("counter") : "none");
+	//get argument value
+	String argument = "counter";
+	String count = (arguments.containsKey(argument) ? arguments.get(argument) : "none");
 	
-	//show some output
+	//output
 	output.append("This is output being displayed as text/plain, with the counter at " + count + ".");
 }
 ```
@@ -44,7 +45,7 @@ Once you've done that, you can link it to your server by calling the following:
 server.link("/hello/world", new Definition(MyRequestHandler.class, RequestType.GET_REQUEST, ContentType.TEXT_PLAIN_TYPE));
 ```
 
-The above will link a custom handler to the **/hello/world** address on the server, accessible with a **GET** request with a content type of **text/plain**
+The above will link a custom handler to the **/hello/world** address on the server, accessible with a **GET** request with a content type of **text/plain**.
 
 Arguments can be supplied to the URL by appending **?count=32** to the end of the URL, like so: **/hello/world?count=32**.
 
