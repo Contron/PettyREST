@@ -104,6 +104,15 @@ public class Transaction implements Runnable
 		String requestLine = this.inputStream.readLine();
 		String[] requestParts = requestLine.split(" ");
 		
+		//check length
+		if (requestParts.length < 3)
+		{
+			//error
+			this.outputStream.write(Output.constructAll(Reply.BAD_REQUEST_400_REPLY));
+			
+			return;
+		}
+		
 		//get info
 		String type = requestParts[0].trim();
 		String resource = requestParts[1].trim();
@@ -126,7 +135,7 @@ public class Transaction implements Runnable
 				//split again
 				String[] fieldData = field.split(Transaction.KEY_VALUE_OPERATOR);
 				if (fieldData.length < 2)
-					break;
+					continue;
 				
 				//put
 				String key = fieldData[0].trim();
@@ -148,6 +157,9 @@ public class Transaction implements Runnable
 			
 			//split
 			String[] lineData = headerLine.split(Transaction.HEADER_SEPARATOR);
+			if (lineData.length < 2)
+				continue;
+			
 			String key = lineData[0].trim();
 			String value = lineData[1].trim();
 				
@@ -158,10 +170,8 @@ public class Transaction implements Runnable
 		//read POST data
 		if (this.inputStream.ready())
 		{
-			//line builder
+			//read line by line
 			StringBuilder lineBuilder = new StringBuilder();
-			
-			//read char by char
 			while (this.inputStream.ready())
 				lineBuilder.append((char) this.inputStream.read());
 			
@@ -173,7 +183,7 @@ public class Transaction implements Runnable
 				//split again
 				String[] fieldData = field.split(Transaction.KEY_VALUE_OPERATOR);
 				if (fieldData.length < 2)
-					break;
+					continue;
 				
 				//put
 				String key = fieldData[0].trim();
@@ -218,7 +228,7 @@ public class Transaction implements Runnable
 		
 		//check request type
 		if (!requestType.equals(type))
-			return Output.constructAll(Reply.BAD_REQUEST_400_REPLY);
+			return Output.constructAll(Reply.METHOD_NOT_ALLOWED_405_REPLY);
 		
 		try
 		{		
