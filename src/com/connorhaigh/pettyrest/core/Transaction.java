@@ -252,11 +252,11 @@ public class Transaction implements Runnable
 		if (!this.server.contains(resource))
 			return Output.constructAll(Reply.NOT_FOUND_404_REPLY);
 		
-		//get
+		//get definition
 		Definition definition = this.server.get(resource);
-		String requestType = definition.getRequestType().getType();
 		
 		//check request type
+		String requestType = definition.getRequestType().getType();
 		if (!requestType.equals(type))
 			return Output.constructAll(Reply.METHOD_NOT_ALLOWED_405_REPLY);
 		
