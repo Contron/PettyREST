@@ -17,7 +17,7 @@ public class Header
 		StringBuilder stringBuilder = new StringBuilder();
 		
 		//code
-		stringBuilder.append("HTTP/1.1 " + reply.getReply() + Header.CARRIAGE_RETURN);
+		stringBuilder.append(PettyREST.HTTP_VERSION + reply.getReply() + Header.CARRIAGE_RETURN);
 		
 		//content type, length and connection
 		stringBuilder.append("Content-Type: " + type.getType() + Header.CARRIAGE_RETURN);

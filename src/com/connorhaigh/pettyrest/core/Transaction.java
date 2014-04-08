@@ -127,26 +127,52 @@ public class Transaction implements Runnable
 		int argsIndex = resource.indexOf(Transaction.ARGUMENT_INDICATOR);
 		if (argsIndex != -1)
 		{
-			//extract arguments
-			String argumentsLine = resource.substring(argsIndex + 1);
-			String[] argumentData = argumentsLine.split(Transaction.ARGUMENT_SEPARATOR);
-			for (String field : argumentData)
-			{
-				//split again
-				String[] fieldData = field.split(Transaction.KEY_VALUE_OPERATOR);
-				if (fieldData.length < 2)
-					continue;
-				
-				//put
-				String key = fieldData[0].trim();
-				String value = fieldData[1].trim();
-				arguments.put(key, value);
-			}
-			
-			//remove from request
+			//read arguments
+			this.readArguments(resource, argsIndex, arguments);
 			resource = resource.substring(0, argsIndex);
 		}
 		
+		//read headers and POST data
+		this.readHeaders(header);
+		this.readPost(post);
+		
+		//output
+		this.outputStream.write(this.process(version, type, arguments, header, post, resource));
+	}
+	
+	/**
+	 * Reads the arguments from this transaction's resource identifier.
+	 * @param resource the resource identifier
+	 * @param argsIndex the index of the argument character
+	 * @param arguments the arguments map to place entries in
+	 * @throws IOException if the stream could not be read
+	 */
+	private void readArguments(String resource, int argsIndex, HashMap<String, String> arguments) throws IOException
+	{	
+		//read arguments
+		String argumentsLine = resource.substring(argsIndex + 1);
+		String[] argumentData = argumentsLine.split(Transaction.ARGUMENT_SEPARATOR);
+		for (String field : argumentData)
+		{
+			//split again
+			String[] fieldData = field.split(Transaction.KEY_VALUE_OPERATOR);
+			if (fieldData.length < 2)
+				continue;
+			
+			//put
+			String key = fieldData[0].trim();
+			String value = fieldData[1].trim();
+			arguments.put(key, value);
+		}
+	}
+	
+	/**
+	 * Reads the headers from this transaction's underlying input stream.
+	 * @param header the header map to place entries in
+	 * @throws IOException if the stream could not be read
+	 */
+	private void readHeaders(HashMap<String, String> header) throws IOException
+	{
 		//read input headers
 		String headerLine = null;
 		while ((headerLine = this.inputStream.readLine()) != null)
@@ -160,24 +186,31 @@ public class Transaction implements Runnable
 			if (lineData.length < 2)
 				continue;
 			
+			//put
 			String key = lineData[0].trim();
 			String value = lineData[1].trim();
-				
-			//put
 			header.put(key, value);
 		}
-		
-		//read POST data
+	}
+	
+	/**
+	 * Reads the POST data from this transaction's underlying input stream.
+	 * @param post the POST map to place entries in
+	 * @throws IOException if the stream could not be read
+	 */
+	private void readPost(HashMap<String, String> post) throws IOException
+	{
+		//check if ready
 		if (this.inputStream.ready())
 		{
-			//read line by line
+			//read char by char
 			StringBuilder lineBuilder = new StringBuilder();
 			while (this.inputStream.ready())
 				lineBuilder.append((char) this.inputStream.read());
 			
 			//split
-			String fieldLine = lineBuilder.toString();
-			String[] lineData = fieldLine.split(Transaction.POST_SEPARATOR);
+			String line = lineBuilder.toString();
+			String[] lineData = line.split(Transaction.POST_SEPARATOR);
 			for (String field : lineData)
 			{
 				//split again
@@ -191,9 +224,6 @@ public class Transaction implements Runnable
 				post.put(key, value);
 			}
 		}
-		
-		//output
-		this.outputStream.write(this.process(version, type, arguments, header, post, resource));
 	}
 	
 	/**
@@ -248,6 +278,9 @@ public class Transaction implements Runnable
 		}
 		catch (Exception ex)
 		{
+			//notify
+			this.server.notifyErrorListeners(ex);
+			
 			//error
 			return Output.constructAll(Reply.INTERNAL_SERVER_ERROR_500_REPLY);
 		}
