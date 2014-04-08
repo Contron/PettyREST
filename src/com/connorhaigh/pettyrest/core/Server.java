@@ -20,6 +20,10 @@ public class Server implements Runnable
 	{
 		this.port = port;
 		
+		this.maxArguments = 8;
+		this.maxHeaders = 32;
+		this.maxPost = 16;
+		
 		this.running = false;
 		this.runningThread = null;
 		this.serverSocket = null;
@@ -159,7 +163,61 @@ public class Server implements Runnable
 	{
 		return this.port;
 	}
-
+	
+	/**
+	 * Sets the maximum number of arguments allowed by this server.
+	 * @param maxArguments the new maximum number of arguments
+	 */
+	public void setMaxArguments(int maxArguments)
+	{
+		this.maxArguments = maxArguments;
+	}
+	
+	/**
+	 * Returns the maximum number of arguments allowed by this server.
+	 * @return the maximum number of arguments
+	 */
+	public int getMaxArguments()
+	{
+		return this.maxArguments;
+	}
+	
+	/**
+	 * Sets the maximum number of header fields allowed by this server.
+	 * @param maxHeaders the new maximum number of header fields
+	 */
+	public void setMaxHeaders(int maxHeaders)
+	{
+		this.maxHeaders = maxHeaders;
+	}
+	
+	/**
+	 * Returns the maximum number of header fields allowed by this server.
+	 * @return the maximum number of header fields 
+	 */
+	public int getMaxHeaders()
+	{
+		return this.maxHeaders;
+	}
+	
+	/**
+	 * Sets the maximum number of POST arguments allowed by this server.
+	 * @param maxPost the new maximum number of POST arguments
+	 */
+	public void setMaxPost(int maxPost)
+	{
+		this.maxPost = maxPost;
+	}
+	
+	/**
+	 * Returns the maximum number of POST arguments allowed by this server.
+	 * @return the maximum number of POST arguments
+	 */
+	public int getMaxPost()
+	{
+		return this.maxPost;
+	}
+	
 	/**
 	 * Add a transaction listener to this server to be notified when new transactions are created.
 	 * @param transactionListener the transaction listener to add
@@ -219,6 +277,10 @@ public class Server implements Runnable
 	}
 	
 	private int port;
+	
+	private int maxArguments;
+	private int maxHeaders;
+	private int maxPost;
 	
 	private boolean running;
 	private Thread runningThread;

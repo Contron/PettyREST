@@ -211,7 +211,7 @@ public class Transaction implements Runnable
 			String resource)
 	{
 		//check size
-		if (arguments.size() > PettyREST.MAX_ARGUMENTS || header.size() > PettyREST.MAX_HEADERS || post.size() > PettyREST.MAX_POST)
+		if (arguments.size() > this.server.getMaxArguments() || header.size() > this.server.getMaxHeaders() || post.size() > this.server.getMaxPost())
 			return Output.constructAll(Reply.REQUEST_TOO_LARGE_413_REPLY);
 		
 		//check version
