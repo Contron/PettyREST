@@ -44,7 +44,7 @@ public class Transaction implements Runnable
 		}
 		catch (Exception ex)
 		{
-			//error
+			//notify
 			this.server.notifyErrorListeners(ex);
 		}
 	}
@@ -107,7 +107,7 @@ public class Transaction implements Runnable
 		//check length
 		if (requestParts.length < 3)
 		{
-			//error
+			//bad request
 			this.outputStream.write(Output.constructAll(Reply.BAD_REQUEST_400_REPLY));
 			
 			return;
@@ -281,7 +281,7 @@ public class Transaction implements Runnable
 			//notify
 			this.server.notifyErrorListeners(ex);
 			
-			//error
+			//internal error
 			return Output.constructAll(Reply.INTERNAL_SERVER_ERROR_500_REPLY);
 		}
 	}

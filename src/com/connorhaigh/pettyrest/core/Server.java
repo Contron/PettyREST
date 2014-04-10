@@ -58,7 +58,7 @@ public class Server implements Runnable
 			}
 			catch (Exception ex)
 			{
-				//error
+				//notify
 				this.notifyErrorListeners(ex);
 			}
 		}
