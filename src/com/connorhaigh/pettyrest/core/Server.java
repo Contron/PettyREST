@@ -148,7 +148,7 @@ public class Server implements Runnable
 	/**
 	 * Sets the port for this server.
 	 * This has no effect if the server is running.
-	 * @param port the new port to set
+	 * @param port the port to set
 	 */
 	public void setPort(int port)
 	{
@@ -166,7 +166,7 @@ public class Server implements Runnable
 	
 	/**
 	 * Sets the maximum number of arguments allowed by this server.
-	 * @param maxArguments the new maximum number of arguments
+	 * @param maxArguments the maximum number of arguments
 	 */
 	public void setMaxArguments(int maxArguments)
 	{
@@ -184,7 +184,7 @@ public class Server implements Runnable
 	
 	/**
 	 * Sets the maximum number of header fields allowed by this server.
-	 * @param maxHeaders the new maximum number of header fields
+	 * @param maxHeaders the maximum number of header fields
 	 */
 	public void setMaxHeaders(int maxHeaders)
 	{
@@ -202,7 +202,7 @@ public class Server implements Runnable
 	
 	/**
 	 * Sets the maximum number of POST arguments allowed by this server.
-	 * @param maxPost the new maximum number of POST arguments
+	 * @param maxPost the maximum number of POST arguments
 	 */
 	public void setMaxPost(int maxPost)
 	{
@@ -256,7 +256,7 @@ public class Server implements Runnable
 	
 	/**
 	 * Notify all registered transaction listeners of a new transaction.
-	 * @param transaction the new transaction
+	 * @param transaction the transaction
 	 */
 	protected void notifyTransactionListeners(Transaction transaction)
 	{
@@ -267,7 +267,7 @@ public class Server implements Runnable
 	
 	/**
 	 * Notify all registered error listeners of a new error.
-	 * @param exception the new exception
+	 * @param exception the exception
 	 */
 	protected void notifyErrorListeners(Exception exception)
 	{

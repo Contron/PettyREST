@@ -6,7 +6,7 @@ public interface TransactionListener
 {
 	/**
 	 * Called when a new transaction is created.
-	 * @param transaction the new transaction
+	 * @param transaction the transaction
 	 */
 	public abstract void transactionCreated(Transaction transaction);
 }
