@@ -6,9 +6,9 @@ import com.connorhaigh.pettyrest.http.RequestType;
 public class Definition 
 {
 	/**
-	 * Create a new request class definition.
-	 * @param requestType the type of the request (i.e. GET)
-	 * @param contentType the content type output of the request (i.e. HTML)
+	 * Create a new handler definition.
+	 * @param requestType the type of the request
+	 * @param contentType the content type output of the request
 	 * @param handler the handler that will respond to the request
 	 */
 	public Definition(RequestType requestType, ContentType contentType, Handler handler)
@@ -17,6 +17,15 @@ public class Definition
 		this.contentType = contentType;
 		
 		this.handler = handler;
+	}
+	
+	/**
+	 * Create a new handler definition.
+	 * @param handler the handler
+	 */
+	public Definition(Handler handler)
+	{
+		this(RequestType.GET_REQUEST, ContentType.TEXT_PLAIN_TYPE, handler);
 	}
 	
 	/**

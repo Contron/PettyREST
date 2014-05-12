@@ -118,7 +118,7 @@ public class Transaction implements Runnable
 		
 		//data maps
 		HashMap<String, String> arguments = new HashMap<String, String>();
-		HashMap<String, String> header = new HashMap<String, String>();
+		HashMap<String, String> headers = new HashMap<String, String>();
 		HashMap<String, String> post = new HashMap<String, String>();
 		
 		//check arguments
@@ -131,11 +131,11 @@ public class Transaction implements Runnable
 		}
 		
 		//read headers and POST data
-		this.readHeaders(header);
+		this.readHeaders(headers);
 		this.readPost(post);
 		
 		//output
-		this.outputStream.write(this.process(version, type, arguments, header, post, resource));
+		this.outputStream.write(this.process(version, type, arguments, headers, post, resource));
 	}
 	
 	/**
@@ -166,10 +166,10 @@ public class Transaction implements Runnable
 	
 	/**
 	 * Reads the headers from this transaction's underlying input stream.
-	 * @param header the header map to place entries in
+	 * @param headers the header map to place entries in
 	 * @throws IOException if the stream could not be read
 	 */
-	private void readHeaders(HashMap<String, String> header) throws IOException
+	private void readHeaders(HashMap<String, String> headers) throws IOException
 	{
 		//read input headers
 		String headerLine = null;
@@ -187,7 +187,7 @@ public class Transaction implements Runnable
 			//put
 			String key = lineData[0].trim();
 			String value = lineData[1].trim();
-			header.put(key, value);
+			headers.put(key, value);
 		}
 	}
 	
@@ -229,17 +229,17 @@ public class Transaction implements Runnable
 	 * @param version the HTTP version
 	 * @param type the type of the request
 	 * @param arguments the map containing arguments, if any
-	 * @param header the map containing the header data
+	 * @param headers the map containing the header data
 	 * @param post the map containing the POST data
 	 * @param resource the resource to look for
 	 * @return the page.
 	 */
 	private String process(String version, String type, 
-			HashMap<String, String> arguments, HashMap<String, String> header, HashMap<String, String> post, 
+			HashMap<String, String> arguments, HashMap<String, String> headers, HashMap<String, String> post, 
 			String resource)
 	{
 		//check size
-		if (arguments.size() > this.server.getMaxArguments() || header.size() > this.server.getMaxHeaders() || post.size() > this.server.getMaxPost())
+		if (arguments.size() > this.server.getMaxArguments() || headers.size() > this.server.getMaxHeaders() || post.size() > this.server.getMaxPost())
 			return Output.constructAll(Reply.REQUEST_TOO_LARGE_413_REPLY);
 		
 		//check version
@@ -263,11 +263,11 @@ public class Transaction implements Runnable
 			//handle request
 			String output = null;
 			Handler request = definition.getHandler();
-			output = request.handle(arguments, header, post);
+			output = request.handle(arguments, headers, post);
 			
 			//construct
-			String headers = Header.construct(Reply.OKAY_200_REPLY, definition.getContentType(), output.length());
-			String page = (headers + output);
+			String header = Header.construct(Reply.OKAY_200_REPLY, definition.getContentType(), output.length());
+			String page = (header + output);
 		
 			return page;
 		}
