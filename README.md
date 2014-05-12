@@ -29,7 +29,7 @@ To add functionality to the server, it's as easy as linking an address with a sp
 server.link("/demonstration", new Definition((arguments, headers, post) -> "Hello, world"));
 ```
 
-The above will link a custom handler to the **/demonstration** address on the server, accessible with a **GET** request with a content type of **text/html**. Of course, you can change the request type or content type by passing the respective arguments.
+The above will link a custom handler to the **/demonstration** address on the server, accessible with a **GET** request with a content type of **text/plain**. Of course, you can change the request type or content type by passing the respective arguments.
 
 Header information, POST data (if the method isn't anything but, this will be empty), and arguments (if there are no arguments present, this will also be empty) are all supplied. Output is whatever is returned from the method.
 

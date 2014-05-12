@@ -20,7 +20,7 @@ public class Definition
 	}
 	
 	/**
-	 * Create a new handler definition.
+	 * Create a new handler definition with the default request type and content type.
 	 * @param handler the handler
 	 */
 	public Definition(Handler handler)
