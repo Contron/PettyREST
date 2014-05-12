@@ -85,8 +85,6 @@ public class Transaction implements Runnable
 		//wrapper streams
 		this.outputStream.flush();
 		this.outputStream.close();
-		
-		//close the input stream after
 		this.inputStream.close();
 		
 		//stop thread
@@ -262,17 +260,14 @@ public class Transaction implements Runnable
 		
 		try
 		{		
-			//output
-			StringBuilder output = new StringBuilder();
-			
-			//create request class and handle
-			Class<? extends Request> requestClass = definition.getRequestClass();
-			Request request = requestClass.newInstance();
-			request.handle(arguments, header, post, output);
+			//handle request
+			String output = null;
+			Handler request = definition.getHandler();
+			output = request.handle(arguments, header, post);
 			
 			//construct
 			String headers = Header.construct(Reply.OKAY_200_REPLY, definition.getContentType(), output.length());
-			String page = (headers + output.toString());
+			String page = (headers + output);
 		
 			return page;
 		}
@@ -281,7 +276,6 @@ public class Transaction implements Runnable
 			//notify
 			this.server.notifyErrorListeners(ex);
 			
-			//internal error
 			return Output.constructAll(Reply.INTERNAL_SERVER_ERROR_500_REPLY);
 		}
 	}

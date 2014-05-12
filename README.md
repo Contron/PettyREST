@@ -23,33 +23,22 @@ The above server won't do anything by itself, so why don't we add functionality?
 Adding functionality
 ------
 
-To get the server to respond to requests, you'll need to extend the ```Request``` class and override the ```handle()``` method yourself.
-
-Header information, POST data (if the method isn't anything but, this will be empty), and arguments (if there are no arguments present, this will also be empty) are all supplied. Output to the browser is via appending to the ```output``` builder.
+To add functionality to the server, it's as easy as linking an address with a specific handler. For example:
 
 ```java
-public void handle(HashMap<String, String> arguments, HashMap<String, String> headers, HashMap<String, String> post, StringBuilder output)
+server.link("/demonstration", new Definition(RequestType.GET_REQUEST, ContentType.TEXT_HTML_TYPE, (arguments, header, post) ->
 {
-	//get argument value
-	String argument = "counter";
-	String count = (arguments.containsKey(argument) ? arguments.get(argument) : "none");
-	
-	//output
-	output.append("This is output being displayed as text/plain, with the counter at " + count + ".");
-}
+	return "Hello, world!";
+}));
 ```
 
-Once you've done that, you can link it to your server by calling the following:
+This can even be condensed down further, to:
 
-```java
-server.link("/hello/world", new Definition(MyRequestHandler.class, RequestType.GET_REQUEST, ContentType.TEXT_PLAIN_TYPE));
-```
+server.link("/demonstration", new Definition(RequestType.GET_REQUEST, ContentType.TEXT_HTML_TYPE, (arguments, header, post) -> "Hello, world!"));
 
-The above will link a custom handler to the **/hello/world** address on the server, accessible with a **GET** request with a content type of **text/plain**.
+The above will link a custom handler to the **/demonstration** address on the server, accessible with a **GET** request with a content type of **text/html**.
 
-Arguments can be supplied to the URL by appending **?count=32** to the end of the URL, like so: **/hello/world?count=32**.
-
-It is important to ensure that there is ***no*** trailing forward slash at the end of the URL when you link it.
+Header information, POST data (if the method isn't anything but, this will be empty), and arguments (if there are no arguments present, this will also be empty) are all supplied. Output is whatever is returned from the method.
 
 Roadmap
 ------
