@@ -15,7 +15,7 @@ public class Output
 	{
 		//get page and header
 		String page = Page.construct(reply.getReply(), reply.getDescription());
-		String header = Header.construct(reply, ContentType.TEXT_HTML_TYPE, page.length());
+		String header = Header.construct(reply, ContentType.TEXT_HTML, page.length());
 		
 		return (header + page);
 	}

@@ -22,8 +22,8 @@ public class ContentType
 		return (this.type + "/" + this.subtype);
 	}
 	
-	public static final ContentType TEXT_PLAIN_TYPE = new ContentType("text", "plain");
-	public static final ContentType TEXT_HTML_TYPE = new ContentType("text", "html");
+	public static final ContentType TEXT_PLAIN = new ContentType("text", "plain");
+	public static final ContentType TEXT_HTML = new ContentType("text", "html");
 	
 	private String type;
 	private String subtype;

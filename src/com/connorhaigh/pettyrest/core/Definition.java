@@ -25,7 +25,7 @@ public class Definition
 	 */
 	public Definition(Handler handler)
 	{
-		this(RequestType.GET_REQUEST, ContentType.TEXT_PLAIN_TYPE, handler);
+		this(RequestType.GET, ContentType.TEXT_PLAIN, handler);
 	}
 	
 	/**

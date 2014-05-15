@@ -106,7 +106,7 @@ public class Transaction implements Runnable
 		if (requestParts.length < 3)
 		{
 			//bad request
-			this.outputStream.write(Output.constructAll(Reply.BAD_REQUEST_400_REPLY));
+			this.outputStream.write(Output.constructAll(Reply.BAD_REQUEST_400));
 			
 			return;
 		}
@@ -240,15 +240,15 @@ public class Transaction implements Runnable
 	{
 		//check size
 		if (arguments.size() > this.server.getMaxArguments() || headers.size() > this.server.getMaxHeaders() || post.size() > this.server.getMaxPost())
-			return Output.constructAll(Reply.REQUEST_TOO_LARGE_413_REPLY);
+			return Output.constructAll(Reply.REQUEST_TOO_LARGE_413);
 		
 		//check version
 		if (!version.equals(PettyREST.HTTP_VERSION))
-			return Output.constructAll(Reply.HTTP_VERSION_NOT_SUPPORTED_505_REPLY);
+			return Output.constructAll(Reply.HTTP_VERSION_NOT_SUPPORTED_505);
 		
 		//check for match
 		if (!this.server.contains(resource))
-			return Output.constructAll(Reply.NOT_FOUND_404_REPLY);
+			return Output.constructAll(Reply.NOT_FOUND_404);
 		
 		//get definition
 		Definition definition = this.server.get(resource);
@@ -256,7 +256,7 @@ public class Transaction implements Runnable
 		//check request type
 		String requestType = definition.getRequestType().getType();
 		if (!requestType.equals(type))
-			return Output.constructAll(Reply.METHOD_NOT_ALLOWED_405_REPLY);
+			return Output.constructAll(Reply.METHOD_NOT_ALLOWED_405);
 		
 		try
 		{		
@@ -266,7 +266,7 @@ public class Transaction implements Runnable
 			output = request.handle(arguments, headers, post);
 			
 			//construct
-			String header = Header.construct(Reply.OKAY_200_REPLY, definition.getContentType(), output.length());
+			String header = Header.construct(Reply.OKAY_200, definition.getContentType(), output.length());
 			String page = (header + output);
 		
 			return page;
@@ -276,7 +276,7 @@ public class Transaction implements Runnable
 			//notify
 			this.server.notifyErrorListeners(ex);
 			
-			return Output.constructAll(Reply.INTERNAL_SERVER_ERROR_500_REPLY);
+			return Output.constructAll(Reply.INTERNAL_SERVER_ERROR_500);
 		}
 	}
 	

@@ -20,9 +20,9 @@ public class RequestType
 		return this.type;
 	}
 	
-	public static final RequestType GET_REQUEST = new RequestType("GET");
-	public static final RequestType POST_REQUEST = new RequestType("POST");
-	public static final RequestType DELETE_REQUEST = new RequestType("DELETE");
+	public static final RequestType GET = new RequestType("GET");
+	public static final RequestType POST = new RequestType("POST");
+	public static final RequestType DELETE = new RequestType("DELETE");
 	
 	private String type;
 }
